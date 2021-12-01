@@ -2,8 +2,7 @@ const { isValid, solve1, formatInput, validationMap } = require("./");
 const fs = require("fs");
 const path = require("path");
 
-const pathname = path.resolve("./day4/testInput.txt");
-
+const pathname = path.resolve(__dirname + "/testInput.txt");
 const input = fs.readFileSync(pathname, "utf8", (err, data) => data);
 const testInput = input.split("\n\n");
 

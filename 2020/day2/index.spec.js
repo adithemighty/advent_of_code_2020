@@ -9,8 +9,7 @@ const {
 const fs = require("fs");
 const path = require("path");
 
-const pathname = path.resolve("./day2/testInput.txt");
-
+const pathname = path.resolve(__dirname + "/testInput.txt");
 const input = fs.readFileSync(pathname, "utf8", (err, data) => {
   if (err) {
     console.error(err);

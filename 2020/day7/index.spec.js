@@ -2,9 +2,7 @@ const { separateBags } = require("./");
 const fs = require("fs");
 const path = require("path");
 
-const pathname = path.resolve("./day7/testInput.txt");
-
-const thing = fs.readFileSync(pathname, "utf8", (err, data) => data);
+const pathname = path.resolve(__dirname + "/testInput.txt");
 
 const input = fs
   .readFileSync(pathname, "utf8", (err, data) => data)

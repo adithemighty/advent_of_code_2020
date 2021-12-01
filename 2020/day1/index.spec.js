@@ -9,17 +9,8 @@ const {
 const fs = require("fs");
 const path = require("path");
 
-const pathname = path.resolve("./day1/testInput.txt");
-
-const input = fs.readFileSync(pathname, "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log(data);
-
-  return data;
-});
+const pathname = path.resolve(__dirname + "/testInput.txt");
+const input = fs.readFileSync(pathname, "utf8", (err, data) => data);
 const testInput = input.split("\n");
 
 describe("day 1", () => {
