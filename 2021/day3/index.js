@@ -1,12 +1,5 @@
-const getMostCommon = (arr1, arr2) =>
-  arr1.map((num, ind) => (num > arr2[ind] ? 0 : 1));
-
-const reverseArr = (arr) => arr.map((n) => 1 - n);
-
-const getPowerConsumption = (input, withAim) => {
-  const length = input[0].length;
-
-  const [zeroes, ones] = input.reduce(
+const separate = (arr) =>
+  arr.reduce(
     (acc, val) => {
       val
         .split("")
@@ -14,18 +7,57 @@ const getPowerConsumption = (input, withAim) => {
 
       return acc;
     },
-    [new Array(length).fill(0), new Array(length).fill(0), ,]
+    [new Array(arr[0].length).fill(0), new Array(arr[0].length).fill(0)]
   );
+
+const getMostCommon = (arr1, arr2, isOxygen) =>
+  arr1.map((num, ind) => {
+    if (isOxygen) num >= arr2[ind] ? 0 : 1;
+    return num > arr2[ind] ? 0 : 1;
+  });
+
+const reverseArr = (arr) => arr.map((n) => 1 - n);
+
+const getDecimal = (arr) => parseInt(arr.join(""), 2);
+
+const getPowerConsumption = (input, withAim) => {
+  const [zeroes, ones] = separate(input);
 
   const mostCommon = getMostCommon(zeroes, ones);
   const notMostCommon = reverseArr(mostCommon);
 
-  const gamma = parseInt(mostCommon.join(""), 2);
-  const epsilon = parseInt(notMostCommon.join(""), 2);
+  const gamma = getDecimal(mostCommon);
+  const epsilon = getDecimal(notMostCommon);
 
   return gamma * epsilon;
 };
 
+const keep = (arr, search, ind) => arr.filter((val) => val[ind] === search);
+
+const getRating = (input, isOxygen = false, i = 0) => {
+  if (input.length === 1) return getDecimal(input);
+
+  const [zeroes, ones] = separate(input);
+  let search;
+
+  const mostCommon = getMostCommon(zeroes, ones);
+
+  if (isOxygen) search = mostCommon;
+  else search = reverseArr(mostCommon);
+
+  const filter = keep(input, String(search[i]), i);
+
+  return getRating(filter, isOxygen, i + 1);
+};
+
+const getLifeSupportRating = (input) => {
+  const x = getRating(input, true);
+  const y = getRating(input);
+  return x * y;
+};
+
 module.exports = {
+  getRating,
   getPowerConsumption,
+  getLifeSupportRating,
 };
