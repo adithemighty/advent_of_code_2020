@@ -38,14 +38,11 @@ const getRating = (input, isOxygen = false, i = 0) => {
   if (input.length === 1) return getDecimal(input);
 
   const [zeroes, ones] = separate(input);
-  let search;
 
-  const mostCommon = getMostCommon(zeroes, ones);
+  const mostCommon = getMostCommon(zeroes, ones)[i];
+  const search = isOxygen ? mostCommon : 1 - mostCommon;
 
-  if (isOxygen) search = mostCommon;
-  else search = reverseArr(mostCommon);
-
-  const filter = keep(input, String(search[i]), i);
+  const filter = keep(input, String(search), i);
 
   return getRating(filter, isOxygen, i + 1);
 };
