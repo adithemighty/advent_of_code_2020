@@ -4,6 +4,7 @@ class Board {
     this.grid = [];
     this.markedNumbers = [];
     this.unmarkedNumbers = [];
+    this.boardSize = undefined;
   }
 
   cleanInput() {
@@ -20,9 +21,11 @@ class Board {
     // create grid
     this.grid = this.cleanInput();
 
+    this.boardSize = this.grid[0].length;
+
     this.markedNumbers = this.input
       .split("\n")
-      .map(() => new Array(5).fill(undefined));
+      .map(() => new Array(this.boardSize).fill(undefined));
 
     this.unmarkedNumbers = this.cleanInput();
   }
@@ -44,7 +47,7 @@ class Board {
 
   hasFullRow() {
     const [filteredRow] = this.markedNumbers.filter((row) => {
-      return row.filter((val) => val !== undefined).length === 5;
+      return row.filter((val) => val !== undefined).length === this.boardSize;
     });
 
     // check if row is full
@@ -54,15 +57,15 @@ class Board {
   hasFullColumn() {
     let flipped = [];
 
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 5; j++) {
+    for (let i = 0; i < this.boardSize; i++) {
+      for (let j = 0; j < this.boardSize; j++) {
         if (flipped[i]) flipped[i].push(this.markedNumbers[j][i]);
         else flipped[i] = [this.markedNumbers[j][i]];
       }
     }
 
     const [filteredRow] = flipped.filter((row) => {
-      return row.filter((val) => val !== undefined).length === 5;
+      return row.filter((val) => val !== undefined).length === this.boardSize;
     });
 
     return filteredRow || false;
