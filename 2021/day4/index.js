@@ -44,7 +44,7 @@ class Board {
 
   hasFullRow() {
     const [filteredRow] = this.markedNumbers.filter((row) => {
-      return row.filter(Boolean).length === 5;
+      return row.filter((val) => val !== undefined).length === 5;
     });
 
     // check if row is full
@@ -62,7 +62,7 @@ class Board {
     }
 
     const [filteredRow] = flipped.filter((row) => {
-      return row.filter(Boolean).length === 5;
+      return row.filter((val) => val !== undefined).length === 5;
     });
 
     return filteredRow || false;
@@ -84,11 +84,13 @@ class Board {
 }
 
 class Bingo {
-  constructor(input) {
+  constructor({ input, firstWins = true }) {
     this.numbers = [];
     this.boards = [];
     this.input = input;
     this.score = 0;
+    this.firstWins = firstWins;
+    this.winningBoards = new Set([]);
   }
 
   init() {
@@ -106,11 +108,16 @@ class Bingo {
     this.numbers = input.split(",").map(Number);
   }
 
+  keepGoing() {
+    return this.firstWins
+      ? !this.score
+      : this.winningBoards.size < this.boards.length;
+  }
+
   start() {
-    let bingo = false;
     let i = 0;
 
-    while (!bingo) {
+    while (this.keepGoing()) {
       const draw = this.numbers[i];
 
       for (let j = 0; j < this.boards.length; j++) {
@@ -119,12 +126,16 @@ class Bingo {
         board.markNumber(draw);
 
         if (board.checkBingo()) {
-          bingo = true;
+          if (this.firstWins) {
+            // In case there are 2 matches at the same draw, only set the first
+            if (!this.score) this.score = board.calculateScore() * draw;
+          } else {
+            // when bingoing board is in list do nothing
+            if (this.winningBoards.has(j)) continue;
 
-          const score = board.calculateScore();
-
-          // In case there are 2 matches at the same draw, only set the first
-          if (!this.score) this.score = score * Number(draw);
+            this.winningBoards.add(j);
+            this.score = board.calculateScore() * draw;
+          }
         }
       }
 
