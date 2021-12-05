@@ -67,7 +67,7 @@ describe("day 5", () => {
   });
 
   it("p1", () => {
-    const map = new Map(input);
+    const map = new Map({ input });
     map.init();
     map.mapVents();
     const overlap = map.countOverlap();
@@ -78,7 +78,7 @@ describe("day 5", () => {
   });
 
   it("p2", () => {
-    const map = new Map(input, false);
+    const map = new Map({ input, noDiagonals: false });
     map.init();
     map.mapVents();
 

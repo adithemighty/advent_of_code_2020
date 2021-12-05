@@ -10,6 +10,7 @@ const makeRange =
     const yStart = Math.min(y1, y2);
     const range = [];
 
+    // handle diagonals
     if (x1 !== x2 && y1 !== y2) {
       if (noDiagonals) return {};
 
@@ -24,11 +25,8 @@ const makeRange =
         const direction =
           (x1 < x2 && y1 < y2) || (x1 > x2 && y1 > y2) ? "down" : "up";
 
-        if (direction === "down") {
-          range.push([xStart + i, yStart + i]);
-        } else {
-          range.push([xStart + i, yEnd - i]);
-        }
+        if (direction === "down") range.push([xStart + i, yStart + i]);
+        else range.push([xStart + i, yEnd - i]);
       }
 
       return { range, xEnd, yEnd };
@@ -38,11 +36,11 @@ const makeRange =
       for (let y = yStart; y <= yEnd; y++) range.push([x, y]);
     }
 
-    return { range, xEnd, yEnd };
+    return { range, xEnd };
   };
 
 class Map {
-  constructor(input, noDiagonals = true) {
+  constructor({ input, noDiagonals = true }) {
     this.input = input;
     this.ranges = [];
     this.noDiagonals = noDiagonals;
@@ -53,11 +51,11 @@ class Map {
   makeRange = makeRange;
 
   init() {
-    // figure out length of every row
+    // length of every row
     let x = 0;
-    // handle input
+    // make ranges
     this.ranges = this.input.split("\n").map((a) => {
-      const { range, xEnd, yEnd } = this.makeRange(this.noDiagonals)(a);
+      const { range, xEnd } = this.makeRange(this.noDiagonals)(a);
       if (xEnd > x) x = xEnd;
 
       return range;
@@ -66,7 +64,7 @@ class Map {
     this.max = x;
   }
 
-  setVent(x, y) {
+  setVent([x, y]) {
     if (this.vents[y]) {
       const curr = this.vents[y][x];
       this.vents[y][x] = curr ? curr + 1 : 1;
@@ -78,11 +76,7 @@ class Map {
 
   mapVents() {
     this.ranges.forEach((range, ind) => {
-      if (!range) return;
-      range.forEach((point, i) => {
-        const [x, y] = point;
-        this.setVent(x, y);
-      });
+      if (range) range.forEach((point) => this.setVent(point));
     });
   }
 
