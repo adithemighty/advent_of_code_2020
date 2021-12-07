@@ -6,7 +6,7 @@ const pathname = path.resolve(__dirname + "/input.txt");
 
 const input = fs.readFileSync(pathname, "utf8", (err, data) => data);
 
-describe("day 5", () => {
+describe("day 7", () => {
   it("p1", () => {
     // uncomment for test input
     // expect(getMinFuel(input)).toBe(37);
