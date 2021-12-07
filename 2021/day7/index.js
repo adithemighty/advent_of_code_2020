@@ -1,11 +1,11 @@
 const getMinFuel = (input, p2 = false) => {
   const split = input.split(",").map(Number);
   const max = Math.max(...split);
-  const map = split.reduce((acc, val) => {
-    acc[val] = acc[val] ? acc[val] + 1 : 1;
-
-    return acc;
-  }, {});
+  const key = p2 ? 2 : 1;
+  const map = split.reduce(
+    (acc, val) => ({ ...acc, [val]: acc[val] ? acc[val] + 1 : 1 }),
+    {}
+  );
 
   const tracker = {
     1: {},
@@ -16,23 +16,24 @@ const getMinFuel = (input, p2 = false) => {
     let distance = 0;
 
     Object.keys(map).reduce((acc, a) => {
+      // Absolute distance between two points
+      const n = Math.abs(a - i);
+      let diff = 0;
+
       if (p2) {
-        const n = Math.abs(a - i);
         const triangularNum = (n * (n + 1)) / 2;
-        distance += triangularNum * map[a];
-        acc[2][i] = distance;
-      } else {
-        distance += Math.abs(a - i) * map[a];
-        acc[1][i] = distance;
-      }
+        diff = triangularNum;
+      } else diff = n;
+
+      // Add sum of all occurrences of the number in the map
+      distance += diff * map[a];
+      acc[p2 ? 2 : 1][i] = distance;
 
       return acc;
     }, tracker);
   }
 
-  return p2
-    ? Math.min(...Object.values(tracker[2]))
-    : Math.min(...Object.values(tracker[1]));
+  return Math.min(...Object.values(tracker[p2 ? 2 : 1]));
 };
 
 module.exports = { getMinFuel };
